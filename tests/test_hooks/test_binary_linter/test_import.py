@@ -25,7 +25,7 @@ class BinaryLinterImportErrorTests(HookTestCase):
     def test_import_error(self):
         tools.save('conanfile.py', content=self.conanfile)
         output = self.conan(['create', '.', 'name/version@jgsogo/test'], expected_return_code=1)
-        self.assertIn("ModuleNotFoundError: No module named 'lief'", output)
+        self.assertIn("No module named 'lief'", output)
 
 
 class BinaryLinterMockedPackageTests(HookTestCase):
