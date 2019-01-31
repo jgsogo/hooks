@@ -7,6 +7,7 @@ from mock import patch, MagicMock
 import sys
 from conans import tools
 from tests.utils.test_cases.conan_client import HookTestCase
+import six
 
 here = os.path.dirname(__file__)
 
@@ -25,7 +26,10 @@ class BinaryLinterImportErrorTests(HookTestCase):
     def test_import_error(self):
         tools.save('conanfile.py', content=self.conanfile)
         output = self.conan(['create', '.', 'name/version@jgsogo/test'], expected_return_code=1)
-        self.assertIn("No module named 'lief'", output)
+        if six.PY2:
+            self.assertIn("ImportError: No module named lief", output)
+        else:
+            self.assertIn("ModuleNotFoundError: No module named 'lief'", output)
 
 
 class BinaryLinterMockedPackageTests(HookTestCase):
