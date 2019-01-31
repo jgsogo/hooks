@@ -68,6 +68,7 @@ class ExportMetadataTests(HookTestCase):
         reference = 'name/version@jgsogo/test'
         url = 'http://some.url'
 
+        # Create the Git working repo
         git = tools.Git()
         git.run("init .")
         git.run('config user.email "you@example.com"')
