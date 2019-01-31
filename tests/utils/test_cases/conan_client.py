@@ -66,3 +66,12 @@ class ConanClientTestCase(unittest.TestCase):
 
     def _gimme_tmp(self):
         return os.path.join(self._working_dir, str(uuid.uuid4()))
+
+
+class HookTestCase(ConanClientTestCase):
+    path_to_hook = None  # This is the path to the hook that
+
+    def _get_environ(self, **kwargs):
+        kwargs = super(HookTestCase, self)._get_environ(**kwargs)
+        kwargs.update({'CONAN_HOOKS': self.path_to_hook})
+        return kwargs

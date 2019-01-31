@@ -14,7 +14,7 @@ from six.moves.urllib.parse import quote
 from conans import tools
 from conans.paths import CONAN_MANIFEST
 from tests.utils import capabilities
-from tests.utils.test_cases.conan_client import ConanClientTestCase
+from tests.utils.test_cases.conan_client import HookTestCase
 
 here = os.path.dirname(__file__)
 
@@ -32,7 +32,9 @@ def get_export_metadata_vars():
 METADATA_FILENAME, METADATA_FILENAME_ENV_VAR = get_export_metadata_vars()
 
 
-class ExportMetadataTests(ConanClientTestCase):
+class ExportMetadataTests(HookTestCase):
+    path_to_hook = os.path.join(here, '..', '..', 'hooks', 'export_metadata')
+
     conanfile_base = textwrap.dedent("""\
         from conans import ConanFile
 
@@ -42,11 +44,6 @@ class ExportMetadataTests(ConanClientTestCase):
         """)
     conanfile_plain = conanfile_base.format(exports="")
     conanfile_with_exports = conanfile_base.format(exports='"myfile.txt"')
-
-    def _get_environ(self, **kwargs):
-        kwargs = super(ExportMetadataTests, self)._get_environ(**kwargs)
-        kwargs.update({'CONAN_HOOKS': os.path.join(here, '..', '..', 'hooks', 'export_metadata')})
-        return kwargs
 
     def test_no_repo(self):
         tools.save('conanfile.py', content=self.conanfile_plain)
