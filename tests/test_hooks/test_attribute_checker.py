@@ -5,10 +5,14 @@ import textwrap
 
 from conans import tools
 
-from tests.utils.test_cases.conan_client import ConanClientTestCase
+from tests.utils.test_cases.conan_client import HookTestCase
+
+here = os.path.dirname(__file__)
 
 
-class AttributeCheckerTests(ConanClientTestCase):
+class AttributeCheckerTests(HookTestCase):
+    path_to_hook = os.path.join(here, '..', '..', 'hooks', 'attribute_checker')
+
     conanfile_base = textwrap.dedent("""\
         from conans import ConanFile
 
@@ -17,11 +21,6 @@ class AttributeCheckerTests(ConanClientTestCase):
         """)
     conanfile_basic = conanfile_base.format(placeholder='pass')
     conanfile_alias = conanfile_base.format(placeholder='alias = "something"')
-
-    def _get_environ(self, **kwargs):
-        kwargs = super(AttributeCheckerTests, self)._get_environ(**kwargs)
-        kwargs.update({'CONAN_HOOKS': os.path.join(os.path.dirname(__file__), '..', '..', 'hooks', 'attribute_checker')})
-        return kwargs
 
     def test_conanfile_basic(self):
         tools.save('conanfile.py', content=self.conanfile_basic)
